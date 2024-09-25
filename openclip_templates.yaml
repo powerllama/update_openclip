@@ -15,7 +15,6 @@ default:
           text: "100" # Modify
         - tag: dropMode
           text: NDF # Hardcode
-
     - tag: spans
       children:
         - tag: span

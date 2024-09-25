@@ -84,6 +84,8 @@ def update_openclip(
     types_seq = ['EXR', 'exr', 'JPG', 'jpg', 'JPEG', 'jpeg', 'PNG', 'png']
     # types_movies = ['MOV', 'mov', 'MP4', 'mp4']
     version_pattern = r'(\w+).(v\d+)'
+    version_pattern = r'(.+?)_(v\d+)'
+    print (os.path.basename(render_path))
     name_version_match = re.search(version_pattern, os.path.basename(render_path))
     filename, extension = os.path.splitext(os.path.basename(render_path))
     input_extension = extension[1:]
