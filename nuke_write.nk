@@ -4,7 +4,7 @@ ModifyMetaData {
   {set flame/openclip /path/to/open.clip}
  }
  name ModifyMetadata
- label "openclip path"
+ label "openclip path - no need to edit, set it on the Write node"
  note_font Helvetica
  selected true
  xpos 71
