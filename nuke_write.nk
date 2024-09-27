@@ -1,7 +1,7 @@
 ModifyMetaData {
  metadata {
-  {set nuke_script /mnt/projects/generic/gen/gen_0010/comp/nuke/openclip_test.nk}
-  {set flame/openclip /mnt/RAID/temp/t060.clip}
+  {set nuke_script /path.to/nuke/script.nk}
+  {set flame/openclip /path/to/open.clip}
  }
  name ModifyMetadata
  label "openclip path"
@@ -31,12 +31,12 @@ Write {
  ypos 55
  addUserKnob {20 update_openclip_tab l "Update Openclip"}
  addUserKnob {2 openclip l "OpenClip File"}
- openclip /path/to/openclip.clip
+ openclip /path/to/open.clip
  addUserKnob {20 _1 l Setup n 1}
  addUserKnob {2 update_openclip_script l "update_openclip Script"}
- update_openclip_script /mnt/config/flame/update_openclip/update_openclip.py
+ update_openclip_script /path/to/update_openclip.py
  addUserKnob {2 python_exec l "Python Exec"}
- python_exec /mnt/config/flame/update_openclip/.venv/bin/python
+ python_exec /path/to/python/exec/python
  addUserKnob {26 ""}
  addUserKnob {26 help_1 l "" +STARTLINE T "PyYAML Module needed for Python Environment"}
  addUserKnob {20 endGroup n -1}
