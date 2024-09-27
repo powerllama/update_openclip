@@ -1,4 +1,3 @@
-
 ModifyMetaData {
  metadata {
   {set flame/openclip /path/to/openclip/sh010.clip}

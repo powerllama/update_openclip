@@ -33,7 +33,7 @@ def element_from_template(template):
     return element
 
 
-# Recursive read of nested elements in temple (like spans)
+# Recursive read of nested elements in template (like spans)
 def create_nested_elements(children_info, parent_element):
     for child_info in children_info:
         child = ET.SubElement(parent_element, child_info['tag'])
@@ -69,6 +69,11 @@ def find_file_sequence(render_path):
     return sequence_string
 
 
+# Get metadata from clip or image
+def get_metadata(file, metadata_key):
+    print(f"File: {file}, Metadata key: {metadata_key}")
+
+
 # Loads Openclip and appends relevant elements
 def update_openclip(
         openclip,
@@ -78,6 +83,9 @@ def update_openclip(
         dryrun=False
         ):
 
+    # clip_metadata = get_metadata(render_path, "test")
+    # print(clip_metadata)
+
     render_date = get_creation_date(render_path)
     print(render_path, render_date)
     # Get Version from image filename
@@ -85,7 +93,7 @@ def update_openclip(
     # types_movies = ['MOV', 'mov', 'MP4', 'mp4']
     version_pattern = r'(\w+).(v\d+)'
     version_pattern = r'(.+?)_(v\d+)'
-    print (os.path.basename(render_path))
+    print(os.path.basename(render_path))
     name_version_match = re.search(version_pattern, os.path.basename(render_path))
     filename, extension = os.path.splitext(os.path.basename(render_path))
     input_extension = extension[1:]
