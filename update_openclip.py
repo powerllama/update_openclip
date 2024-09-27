@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import datetime
 import argparse
+import parse_metadata
 
 
 def get_creation_date(file_path):
@@ -71,7 +72,11 @@ def find_file_sequence(render_path):
 
 # Get metadata from clip or image
 def get_metadata(file, metadata_key):
-    print(f"File: {file}, Metadata key: {metadata_key}")
+    # print(f"File: {file}, Metadata key: {metadata_key}")
+    metadata = parse_metadata.read_exr_header(file)
+    # for k, v in metadata.items():
+    #     print(f"{k}: {v}")
+    return metadata[metadata_key]
 
 
 # Loads Openclip and appends relevant elements
@@ -83,8 +88,6 @@ def update_openclip(
         dryrun=False
         ):
 
-    # clip_metadata = get_metadata(render_path, "test")
-    # print(clip_metadata)
 
     render_date = get_creation_date(render_path)
     print(render_path, render_date)
@@ -97,8 +100,9 @@ def update_openclip(
     name_version_match = re.search(version_pattern, os.path.basename(render_path))
     filename, extension = os.path.splitext(os.path.basename(render_path))
     input_extension = extension[1:]
+    clip_path = render_path
     if input_extension in types_seq:
-        render_path = find_file_sequence(render_path)
+        clip_path = find_file_sequence(render_path)
 
     render_name = name_version_match.group(1)
     render_version = name_version_match.group(2)
@@ -139,7 +143,7 @@ def update_openclip(
 
     # Set UID and path
     new_render_element.set('uid', render_name)
-    new_render_element.find('.//path').text = render_path
+    new_render_element.find('.//path').text = clip_path
     new_render_element.set('uid', render_name)
     new_render_element.set('vuid', render_version)
 
@@ -149,6 +153,19 @@ def update_openclip(
 
     # Creates a new version entry with structure from template file
     new_version_element = element_from_template(op_template[version_preset])
+
+    # Get metadat from EXR
+    # Nuke Version Preset
+    if version_preset == "nuke_version":
+        # query_metadata = [
+        #     "nuke/flame/openclip",
+        #     "nuke/nuke_script"
+        # ]
+        #
+        # for key in query_metadata:
+        #     key_value = get_metadata(render_path, key)
+        #     print(f"{key}: {key_value}")
+        new_version_element.find('.//batchSetup').text = get_metadata(render_path, 'nuke/nuke_script')
 
     # Modify version values
     new_version_element.set('uid', render_version)

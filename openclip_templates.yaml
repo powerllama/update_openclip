@@ -43,12 +43,12 @@ nuke_version:
           attributes:
             type: binary
         - tag: appVersion
+          # text: nukedata version # Hardcoded
           text: 15.1v2 # Hardcoded
           attributes:
             type: string
         - tag: batchSetup
-          # text: metadata nuke/file
-          text: /path/to/script.nk # Hardcoded | we can try updating this from the EXR metadata
+          text: exr_metadata nuke/nuke_script # Get from EXR metadata
           attributes:
             type: ascii
         - tag: module

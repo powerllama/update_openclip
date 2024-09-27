@@ -1,37 +1,43 @@
 ModifyMetaData {
  metadata {
-  {set flame/openclip /path/to/openclip/sh010.clip}
+  {set nuke_script /mnt/projects/generic/gen/gen_0010/comp/nuke/openclip_test.nk}
+  {set flame/openclip /mnt/RAID/temp/t060.clip}
  }
  name ModifyMetadata
  label "openclip path"
  note_font Helvetica
  selected true
- xpos -83
- ypos 247
+ xpos 71
+ ypos 9
 }
 Write {
  channels rgba
- file /path/to/sh010/render/v01/sh010_v01.%04d.exr
+ file /path/to/versioned/comp/comp_v001.%04d.exr
  file_type exr
  compression DWAA
  metadata "all metadata"
  first_part rgba
  create_directories true
- version 19
+ version 26
  ocioColorspace scene_linear
  display ACES
  view Rec.709
+ beforeRender "import nuke\n\nnuke.scriptSave()\n\nscript_name = nuke.root()\['name'].value()\nopenclip = nuke.thisNode()\['openclip'].value()\n\nmetadata_dict = \{\n'nuke_script': '\{remove nuke_script\}',\n'flame/openclip': '\{flame/openclip\}',\n'nuke_script': '\{set nuke_script \"'+script_name+'\" \}',\n'flame/openclip': '\{set flame/openclip \"'+openclip+'\"\}'\n\n\}\n\ntry:\n    metadata_node = nuke.thisNode().input(0)\n    meta_keys = \[]\n    for k, v in metadata_dict.items():\n        meta_keys.append(v)\n        metadata_node\['metadata'].fromScript(\"\\n\".join(meta_keys))\nexcept:\n    pass\n\nnuke.scriptSave()"
  afterRender "import nuke\nimport re\nimport subprocess\n\nnode = nuke.thisNode()\n\n# Get the openclip file from the metadata\nopenclip = node.metadata()\['flame/openclip']\n\n# Get the render path from write node and change the frame string to a single frame\nfilename = node\['file'].value()\nframe_pattern = r'(%\\d\{0,4\}d|#|#\{2,\}|\[0-9]\{4\})(?!\[-_/])'\nfirst_frame = str(int(nuke.root()\['first_frame'].value())).zfill(4)\nfilename = re.sub(frame_pattern, first_frame, filename)\nprint(filename)\n# Path to Python. Need the PyYAML module installed\npython_path = node\['python_exec'].value()\nupdate_openclip_path = node\['update_openclip_script'].value()\n\n# Process the clip\nprocess = subprocess.Popen(\[python_path, update_openclip_path, '-f', openclip, '-i', filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)\nstdout, stderr = process.communicate()\nif stderr:\n    print(\"Error:\", stderr.decode('utf-8'))"
  name WriteOpenClip
  note_font Helvetica
  selected true
- xpos -83
- ypos 291
+ xpos 68
+ ypos 55
  addUserKnob {20 update_openclip_tab l "Update Openclip"}
- addUserKnob {2 update_openclip_script l "Openclip script"}
+ addUserKnob {2 openclip l "OpenClip File"}
+ openclip /path/to/openclip.clip
+ addUserKnob {20 _1 l Setup n 1}
+ addUserKnob {2 update_openclip_script l "update_openclip Script"}
  update_openclip_script /mnt/config/flame/update_openclip/update_openclip.py
  addUserKnob {2 python_exec l "Python Exec"}
  python_exec /mnt/config/flame/update_openclip/.venv/bin/python
  addUserKnob {26 ""}
  addUserKnob {26 help_1 l "" +STARTLINE T "PyYAML Module needed for Python Environment"}
+ addUserKnob {20 endGroup n -1}
 }
