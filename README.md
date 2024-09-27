@@ -65,7 +65,7 @@ Nuke Write node with extra functionality to append versions to Openclips feeds.
 Openclip file path should be stored in the stream as a ```nuke/flame/openclip``` metadata key.
 
 
-
-
-
+## Limitations
+- Clips and image sequences witout version strings not supported (yet)
+- Unpredictable result for versions with different frame lenghts
 ...

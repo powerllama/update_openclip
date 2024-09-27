@@ -165,7 +165,10 @@ def update_openclip(
         # for key in query_metadata:
         #     key_value = get_metadata(render_path, key)
         #     print(f"{key}: {key_value}")
-        new_version_element.find('.//batchSetup').text = get_metadata(render_path, 'nuke/nuke_script')
+        try:
+            new_version_element.find('.//batchSetup').text = get_metadata(render_path, 'nuke/nuke_script')
+        except Exception as E:
+            print(E)
 
     # Modify version values
     new_version_element.set('uid', render_version)
