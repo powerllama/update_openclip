@@ -67,10 +67,8 @@ python_path = node['python_exec'].value()
 update_openclip_path = node['update_openclip_script'].value()
 
 # Process the clip
-process = subprocess.Popen([
-    python_path, update_openclip_path,
-    '-f', openclip,
-    '-i', filename],
+process = subprocess.Popen(
+    [python_path, update_openclip_path, '-f', openclip, '-i', filename],
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE
 )
