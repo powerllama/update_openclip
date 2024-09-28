@@ -43,8 +43,7 @@ nuke_version:
           attributes:
             type: binary
         - tag: appVersion
-          # text: nukedata version # Hardcoded
-          text: 15.1v2 # Hardcoded
+          text: exr_metadata nuke/nuke_version # Get from EXR metadata
           attributes:
             type: string
         - tag: batchSetup

@@ -52,12 +52,18 @@ def find_file_sequence(render_path):
     render_basename = os.path.basename(render_path)
 
     files = [f for f in os.listdir(render_dir) if os.path.isfile(os.path.join(render_dir, f))]
-    img_name_version_patern = r'(\w+).(v\d+)'
+    # img_name_version_patern = r'(\w+).(v\d+)'
     img_seq_pattern = r'(\w+.v\d+.\d+.\w+)'
     files = [filename for filename in files if re.match(img_seq_pattern, filename)]
     # Find the range of numbers
     frame_pattern = r"(?<=\.)\d+(?=\.)"
-    frames = [re.findall(frame_pattern, f)[0] for f in files]
+    frames = []
+    for f in files:
+        match = re.findall(frame_pattern, f)
+        if match:
+            frames.append(match[0])  # Only add if there is a match
+        else:
+            print(f"No match found in: {f}")
 
     start_frame = min(frames)
     end_frame = max(frames)
@@ -88,13 +94,12 @@ def update_openclip(
         dryrun=False
         ):
 
-
     render_date = get_creation_date(render_path)
     print(render_path, render_date)
     # Get Version from image filename
     types_seq = ['EXR', 'exr', 'JPG', 'jpg', 'JPEG', 'jpeg', 'PNG', 'png']
     # types_movies = ['MOV', 'mov', 'MP4', 'mp4']
-    version_pattern = r'(\w+).(v\d+)'
+    # version_pattern = r'(\w+).(v\d+)'
     version_pattern = r'(.+?)_(v\d+)'
     print(os.path.basename(render_path))
     name_version_match = re.search(version_pattern, os.path.basename(render_path))
@@ -165,6 +170,10 @@ def update_openclip(
         # for key in query_metadata:
         #     key_value = get_metadata(render_path, key)
         #     print(f"{key}: {key_value}")
+        try:
+            new_version_element.find('.//appVersion').text = get_metadata(render_path, 'nuke/nuke_version')
+        except Exception as E:
+            print(E)
         try:
             new_version_element.find('.//batchSetup').text = get_metadata(render_path, 'nuke/nuke_script')
         except Exception as E:
