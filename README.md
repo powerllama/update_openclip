@@ -68,4 +68,3 @@ Openclip file path should be stored in the stream as a ```nuke/flame/openclip```
 ## Limitations
 - Clips and image sequences witout version strings not supported (yet)
 - Unpredictable result for versions with different frame lenghts
-...
