@@ -1,7 +1,7 @@
 ##########################################################
 # These callbacks are to be set as values for the
-# "beforRender" and "afterRender" values on the Write node.
-# The suplied write node template already have these.
+# "beforRender" and "afterRender" knobs on the Write node.
+# The suplied Write node template already have these.
 # Providing this file for visibility and easy editing.
 ##########################################################
 
