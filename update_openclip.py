@@ -108,9 +108,7 @@ def update_openclip(
     version_pattern = r'(.+?)_(v\d+)'
     print(render_path.name)
     name_version_match = re.search(version_pattern, render_path.name)
-    # filename, extension = os.path.splitext(render_path.name)
-    # input_extension = extension[1:]
-    clip_path = render_path
+    clip_path = str(render_path)
     if render_path.suffix.lstrip('.') in types_seq:
         clip_path = find_file_sequence(render_path)
 
