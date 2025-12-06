@@ -15,7 +15,7 @@ from pathlib import Path
 
 
 def get_creation_date(file_path: Path) -> str:
-    creation_timestamp = os.path.getctime(file_path.stat().st_ctime)
+    creation_timestamp = file_path.stat().st_ctime
     creation_datetime = datetime.datetime.fromtimestamp(creation_timestamp)
     formatted_creation_date = creation_datetime.strftime('%Y/%m/%d %H:%M:%S')
 
@@ -98,9 +98,9 @@ def update_openclip(
     version_preset='nuke_version',
     dryrun=False,
 ):
+    render_path = Path(render_path)
     render_date = get_creation_date(render_path)
     print(render_path, render_date)
-    render_path = Path(render_path)
     # Get Version from image filename
     types_seq = ['EXR', 'exr', 'JPG', 'jpg', 'JPEG', 'jpeg', 'PNG', 'png']
     # types_movies = ['MOV', 'mov', 'MP4', 'mp4']
