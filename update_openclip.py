@@ -13,6 +13,8 @@ import parse_metadata
 
 from pathlib import Path
 
+OPENCLIPS_TEMPLATE = 'openclip_templates.json'
+
 
 def get_creation_date(file_path: Path) -> str:
     creation_timestamp = file_path.stat().st_ctime
@@ -134,9 +136,7 @@ def update_openclip(
             return
 
     # Continue if version is new
-    openclip_presets_file = os.path.join(
-        os.path.dirname(__file__), 'openclip_templates.json'
-    )
+    openclip_presets_file = Path(__file__).parent / OPENCLIPS_TEMPLATE
     with open(openclip_presets_file, 'r') as file:
         op_template = json.load(file)
 
