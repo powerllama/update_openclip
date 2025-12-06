@@ -1,19 +1,21 @@
 #!.venv/bin/python
 
 import json
-import os
 import re
 
-# import yaml
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import datetime
 import argparse
 import parse_metadata
 
+from pathlib import Path
 
-def get_creation_date(file_path):
-    creation_timestamp = os.path.getctime(file_path)
+OPENCLIPS_TEMPLATE = 'openclip_templates.json'
+
+
+def get_creation_date(file_path: Path) -> str:
+    creation_timestamp = file_path.stat().st_ctime
     creation_datetime = datetime.datetime.fromtimestamp(creation_timestamp)
     formatted_creation_date = creation_datetime.strftime('%Y/%m/%d %H:%M:%S')
 
@@ -48,17 +50,16 @@ def create_nested_elements(children_info, parent_element):
 
 
 # Builds image sequence string from path to image
-def find_file_sequence(render_path):
+def find_file_sequence(render_path: Path) -> str:
     # Get list of files in the directory
-    render_dir = os.path.dirname(render_path)
-    render_basename = os.path.basename(render_path)
+    render_dir = render_path.parent
+    render_basename = render_path.name
 
-    files = [
-        f for f in os.listdir(render_dir) if os.path.isfile(os.path.join(render_dir, f))
-    ]
+    files = [f.name for f in render_dir.iterdir() if f.is_file()]
     # img_name_version_patern = r'(\w+).(v\d+)'
     img_seq_pattern = r'(\w+.v\d+.\d+.\w+)'
     files = [filename for filename in files if re.match(img_seq_pattern, filename)]
+
     # Find the range of numbers
     frame_pattern = r'(?<=\.)\d+(?=\.)'
     frames = []
@@ -75,7 +76,7 @@ def find_file_sequence(render_path):
 
     # # Construct the output string
     sequence = re.sub(frame_pattern, frame_range, render_basename)
-    sequence_string = os.path.join(render_dir, sequence)
+    sequence_string = str(render_dir / sequence)
 
     return sequence_string
 
@@ -97,6 +98,7 @@ def update_openclip(
     version_preset='nuke_version',
     dryrun=False,
 ):
+    render_path = Path(render_path)
     render_date = get_creation_date(render_path)
     print(render_path, render_date)
     # Get Version from image filename
@@ -104,12 +106,10 @@ def update_openclip(
     # types_movies = ['MOV', 'mov', 'MP4', 'mp4']
     # version_pattern = r'(\w+).(v\d+)'
     version_pattern = r'(.+?)_(v\d+)'
-    print(os.path.basename(render_path))
-    name_version_match = re.search(version_pattern, os.path.basename(render_path))
-    filename, extension = os.path.splitext(os.path.basename(render_path))
-    input_extension = extension[1:]
-    clip_path = render_path
-    if input_extension in types_seq:
+    print(render_path.name)
+    name_version_match = re.search(version_pattern, render_path.name)
+    clip_path = str(render_path)
+    if render_path.suffix.lstrip('.') in types_seq:
         clip_path = find_file_sequence(render_path)
 
     render_name = name_version_match.group(1)
@@ -132,9 +132,7 @@ def update_openclip(
             return
 
     # Continue if version is new
-    openclip_presets_file = os.path.join(
-        os.path.dirname(__file__), 'openclip_templates.json'
-    )
+    openclip_presets_file = Path(__file__).parent / OPENCLIPS_TEMPLATE
     with open(openclip_presets_file, 'r') as file:
         op_template = json.load(file)
 
