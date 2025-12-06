@@ -1,10 +1,8 @@
 #!.venv/bin/python
 
 import json
-import os
 import re
 
-# import yaml
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import datetime
