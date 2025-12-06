@@ -9,17 +9,12 @@ More information about Autodesk Openclip:
 ## Features
 - Standalone multi-platform
 - Suports image sequences and movie files.
-- YAML based presets for metadata and versions entries
+- JSON based presets for metadata and versions entries
 
 
 ## Requirments
 Python 3.xx
 
-PyYAML
-
-```bash
-pip install PyYAML
-```
 
 ## Usage
 
@@ -36,10 +31,10 @@ REQUIRED
 
 OPTIONAL                        
   -p FEED_PRESET,       --feed_preset FEED_PRESET
-                        Openclip feed preset from YAML presets file
+                        Openclip feed preset from JSON presets file
                         
   -m VERSION_PRESET,    --version_preset VERSION_PRESET
-                        Openclip version preset from YAML presets file
+                        Openclip version preset from JSON presets file
                         
   -n, --dry_run         Print results but dont do anything
 ```
